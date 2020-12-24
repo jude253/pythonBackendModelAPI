@@ -1,0 +1,58 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Index</title>
+  <meta name="homePage" content="home page">
+  <meta name="author" content="JudeC">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!--    <script>-->
+<!--        axios.get('/api/textGender')-->
+<!--            .then(response => {-->
+<!--                console.log(response.data);-->
+<!--            })-->
+<!--            .catch(error => console.error(error));-->
+<!--    </script>-->
+</head>
+
+<body>
+    <div>
+        <p>Try typing between 50 and 100 words below:</p>
+        <p><textarea id="textInput" name="textInput" rows="5" cols="50"></textarea></p>
+<!--        <p id="demo">Name</p>-->
+        <p>Prediction:</p>
+        <p id="prediction">Click classify to find out</p>
+        <p>Certainty female:</p>
+        <p id="certFemale">Click classify to find out</p>
+        <p>Certainty male:</p>
+        <p id="certMale">Click classify to find out</p>
+        <button onclick="callClassifier()">Classify</button>
+    </div>
+
+
+    <script>
+    function callClassifier() {
+<!--      document.getElementById("demo").innerHTML = document.getElementById("textInput").value;-->
+      var textInputString = document.getElementById("textInput").value;
+      axios.post('/api/textGender',{textInput: textInputString})
+            .then(response => {
+<!--                console.log(response.data);-->
+                document.getElementById("prediction").innerHTML = response.data["prediction"]
+                document.getElementById("certFemale").innerHTML = response.data["certainty"]["female"]
+                document.getElementById("certMale").innerHTML = response.data["certainty"]["male"]
+            })
+            .catch(error => console.error(error));
+    }
+    </script>
+
+    <script>
+    function showContent() {
+      var temp = document.getElementsByTagName("template")[0];
+      var clone = temp.content.cloneNode(true);
+      document.body.appendChild(clone);
+    }
+    </script>
+</body>
+</html>
