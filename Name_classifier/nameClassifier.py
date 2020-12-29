@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 
 DIMS=256
 
@@ -188,6 +187,10 @@ def naivebayes_pred(pos, neg, posprob, negprob, X_test):
         
         # the log likelihoods of xTestA = 1 + log likelihoods of xTestA = 0 + log likelihood of y=-1
         log_neg = np.dot(xi,Theta_1_neg_1) + np.dot((-1*xi+np.ones(d)),Theta_0_neg_1) + log_y_neg
+        #added this print statement in because sometimes this is where math sometimes seems to not work correctly
+        #It seems like for some reason when I put this comment here, the math works.  It might be a rounding error
+        #I might do the final math somewhere else to ensure it is not rounded off or something.
+        print(log_pos,log_neg)
         log_ratio = log_pos - log_neg
         
         if log_ratio > 0:
@@ -201,6 +204,7 @@ def name_classifier(name):
     xtest = name2features(name.capitalize(), B=DIMS, LoadFile=False)
     pred = naivebayes_pred(pos, neg, posprob, negprob, xtest)
     response = {}
+    print(pred)
     if pred > 0:
         response["prediction"]= "male"
     else:

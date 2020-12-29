@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 import json
-import os
 #import the Deep averaging Neural Network model classifier:
-from werkzeug.utils import redirect
 
 from Gender_age_classifier.gender_text_classifier import gender_text_classifier
 from Name_classifier.nameClassifier import name_classifier

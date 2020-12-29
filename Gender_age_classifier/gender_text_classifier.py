@@ -1,10 +1,7 @@
 import torch
 import torch.nn as nn
-from torch.nn import functional as F
 import torch.utils.data
-from torchvision import transforms
 import numpy as np
-import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
 # Set the seed for PyTorch random number generator
