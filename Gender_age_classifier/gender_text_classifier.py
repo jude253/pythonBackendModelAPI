@@ -60,10 +60,10 @@ class DAN(nn.Module):
         E = self.embeds
         sumInnerProducts = 0
 
-        # this is the ∑𝑗𝐄[:,𝑗]𝐱[𝑗] part:
+        # this is the matrix Multiplication part
         sumInnerProducts = torch.matmul(x, E)
 
-        # this is the ∑𝑖𝐱[𝑖] part:
+        # this is the sum part:
         sumXs = torch.sum(x, axis=1)
 
         oneOverSumXs = 1 / torch.sum(x, axis=1)
