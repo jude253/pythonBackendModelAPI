@@ -3,4 +3,3 @@ numpy
 torch
 torchvision
 sklearn
-scikit-learn
