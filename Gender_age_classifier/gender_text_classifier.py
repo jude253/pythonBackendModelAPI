@@ -20,7 +20,7 @@ print("GPU is available:", gpu_available)
 
 
 cwd = os.getcwd()
-VOCABFILENAME = 'Gender_age_classifier/corpustestMF.csv'
+VOCABFILENAME = "Gender_age_classifier/corpustestMF.csv"
 MODELFILENAME = "Gender_age_classifier/model.pt"
 vocab_size = 12820
 embedding_size = 320
@@ -212,7 +212,7 @@ def prediction(model, testset_input, label_meaning):
 
 
 def gender_text_classifier(input_string):
-    global VOCABFILENAME, MODELFILENAME, vocab_size, label_meaning, embedding_size
+    global VOCABFILENAME, MODELFILENAME, vocab_size, label_meaning, embedding_size,cwd
 
     vocab = csv_to_corpus_dict(VOCABFILENAME)
     testset_input = generate_PyTorch_Dataset(input_string, vocab)

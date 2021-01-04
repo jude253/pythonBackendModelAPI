@@ -1,38 +1,179 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-
-  <title>Index</title>
-  <meta name="homePage" content="home page">
-  <meta name="author" content="JudeC">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<!--    <script>-->
-<!--        axios.get('/api/textGender')-->
-<!--            .then(response => {-->
-<!--                console.log(response.data);-->
-<!--            })-->
-<!--            .catch(error => console.error(error));-->
-<!--    </script>-->
-</head>
-
+<title>Name Gender Classifier</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="shortcut icon" type="image/x-icon" href="/favicon/favicon.ico">
+<style>
+body {font-family: "Lato", sans-serif}
+.mySlides {display: none}
+.grad {background-image: linear-gradient(150deg, #29e658, #2448ff)}
+w3-button:hover {background-color: red;}
+</style>
 <body>
-    <div>
-        <p>Try typing between 50 and 100 words below:</p>
-        <p><textarea id="textInput" name="textInput" rows="5" cols="50"></textarea></p>
-<!--        <p id="demo">Name</p>-->
-        <p>Prediction:</p>
-        <p id="prediction">Click classify to find out</p>
-        <p>Certainty female:</p>
-        <p id="certFemale">Click classify to find out</p>
-        <p>Certainty male:</p>
-        <p id="certMale">Click classify to find out</p>
-        <button onclick="callClassifier()">Classify</button>
+
+<!-- Navbar -->
+    <div class="w3-top">
+      <div class="w3-bar w3-black w3-card">
+        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+        <a href="/index#" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+        <a href="/index#jude" class="w3-bar-item w3-button w3-padding-large w3-hide-small">JUDE</a>
+        <div class="w3-dropdown-hover w3-hide-small">
+          <a href="/index#portfolio" class="w3-padding-large w3-button" title="portfolio">PORTFOLIO <i class="fa fa-caret-down"></i></a>
+          <div class="w3-dropdown-content w3-bar-block w3-card-4">
+            <a href="/textGender" class="w3-bar-item w3-button">Text Gender Classifier</a>
+            <a href="/nameDemo" class="w3-bar-item w3-button">Name Gender Classifier</a>
+            <a href="http://surfcheckmass.com" target="_blank" class="w3-bar-item w3-button">Surf Forecasting Site</a>
+            <a href="https://github.com/jude253" target="_blank" class="w3-bar-item w3-button">Github</a>
+            <a href="https://www.youtube.com/user/DubsnPubs" target="_blank" class="w3-bar-item w3-button">YouTube</a>
+          </div>
+        </div>
+        <a href="/index#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CONTACT</a>
+
+    <!--    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>-->
+      </div>
     </div>
+
+<!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+    <div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
+      <a href="/index#jude" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">JUDE</a>
+      <a href="/index#portfolio" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">PORTFOLIO</a>
+      <a href="/index#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">CONTACT</a>
+    </div>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+
+      <!-- Name Gender Classifier Section -->
+      <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="jude">
+        <h1 class="w3-wide"><b>Text Gender Classifier</b></h1>
+        <p class="w3-opacity"><i>Predicts whether text sounds like it is written by a male or female.  Try it out!</i></p>
+        <br>
+        <div class="w3-content w3-padding-32 grad" style="max-width:700px;">
+            <div class="w3-row">
+                <h4>This works best typing between 50 and 100 words:</h4>
+                <p><textarea id="textInput" name="textInput" rows="7" style = "max-width:90%;width:80%;" ></textarea></p>
+                <div class="w3-content w3-row">
+                    <div class="w3-container w3-cell w3-third">Word count: <span id="wordCount">0</span>
+                    </div>
+                    <div class="w3-container w3-cell w3-third">
+                    </div>
+                    <div class="w3-container w3-cell w3-third">
+                        <button onclick="callClassifier()" class="w3-button w3-black w3-hover-dark-grey" id="classify" name="submit" style="color:white; margin-left:.5em;">Classify</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-content w3-row">
+                <div class="w3-container w3-cell w3-third">
+                    <h5>Prediction:</h5>
+                    <p id="prediction">Click classify to find out</p>
+                </div>
+                <div class="w3-container w3-cell w3-third">
+                    <h5>Certainty female:</h5>
+                    <p id="certFemale">Click classify to find out</p>
+                </div>
+                <div class="w3-container w3-cell w3-third">
+                    <h5>Certainty male:</h5>
+                    <p id="certMale">Click classify to find out</p>
+                </div>
+
+            </div>
+            <div class="w3-content w3-row">
+                <div class="w3-container w3-cell w3-third">
+                </div>
+                <div class="w3-container w3-cell w3-twothird">
+                    <div id="maleBar">
+                        <div id="femaleBar" class="w3-container-padding w3-center" style="height:24px;width:0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <p class="w3-opacity"><i>How does it work?  What does it do?</i></p>
+        <div class="w3-row w3-padding-32">
+            <div class="w3-center">
+                <p class="w3-justify">
+                    I built this classifier using a deep neural network with word embeddings.  The word embeddings are
+                    averaged together in a weighted average and the neural network has 2 layers.  It has been quite a
+                    journey to get this classifier to work and I have learned a lot from it.  It is trained off the
+                    the Blog Authorship Corpus.  The main issue I was having when getting this classifier to work
+                    effectively is that my computer is not powerful enough to run through the whole dataset, so I had
+                    to break down the data into a small sample, then I only took the first 100 words of blog entries
+                    that were over 100 words in length and I skipped over blog entries that didn't have at least 50
+                    words.  I also made sure I had an approximately 50% male and 50% female training dataset.  This
+                    reduced the amount of hyper parameters down to a point where I could train an effective model,
+                    but in the future I am going to use Microsoft Azure to train a Deep Averaging Neural Network on
+                    the whole Blog Authorship Corpus.  Then I plan on expanding this project to be a chrome extension
+                    that people can use to check their email and other text on the internet.
+                </p>
+            </div>
+
+        </div>
+
+      </div>
+
+
+    <!-- The Contact Section -->
+      <div class="w3-container w3-content w3-padding-64" style="max-width:800px" id="contact">
+        <h2 class="w3-wide w3-center">CONTACT</h2>
+        <p class="w3-opacity w3-center"><i>Fan? Drop a note!</i></p>
+        <div class="w3-row w3-padding-32">
+          <div class="w3-col m6 w3-large w3-margin-bottom">
+            <i class="fa fa-map-marker" style="width:30px"></i> Boston, US<br>
+            <i class="fa fa-phone" style="width:30px"></i> Phone: +01 (781) 879-2278<br>
+            <i class="fa fa-envelope" style="width:30px"> </i> Email: judecapachietti@gmail.com<br>
+          </div>
+          <div class="w3-col m6">
+    <!--        <form action="/action_page.php" target="_blank">-->
+              <form>
+              <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+                <div class="w3-half">
+                  <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
+                </div>
+                <div class="w3-half">
+                  <input class="w3-input w3-border" type="text" placeholder="Email" required name="Email">
+                </div>
+              </div>
+              <input class="w3-input w3-border" type="text" placeholder="Message" required name="Message">
+              <button class="w3-button w3-black w3-section w3-right" type="submit">SEND</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    <!-- End Page Content -->
+    </div>
+
+    <!-- Image of location/map -->
+    <img src="/images/pexels-andrew-neel-2859169.jpg" class="w3-image w3-greyscale-min" style="width:100%">
+
+    <!-- Footer -->
+    <footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
+      <a href="https://www.facebook.com/jude.capachietti.9" target="_blank"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
+      <a href="https://www.instagram.com/judecapachietti/" target="_blank"><i class="fa fa-instagram w3-hover-opacity"></i></a>
+      <a href="/images/snapcode.png" target="_blank"><i class="fa fa-snapchat w3-hover-opacity"></i></a>
+      <a href="https://twitter.com/MrCapachietti" target="_blank"><i class="fa fa-twitter w3-hover-opacity"></i></a>
+      <a href="https://www.linkedin.com/in/jude-capachietti/" target="_blank"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
+      <p class="w3-medium">Powered by <a href="https://www.python.org/" target="_blank"><img src="/images/pythonLogo.png" style="width:32px" class="w3-circle"></a></p>
+    </footer>
+
+    <style>
+        body {font-family: "Lato", sans-serif}
+        .mySlides {display: none}
+        .grad {background-image: linear-gradient(60deg, #6600cc, #ff0066)}
+        #femaleBar {background: rgb(0, 0, 0)}
+        #maleBar {background: rgba(0, 0, 0, .5)}
+    </style>
+
 
 
     <script>
+<!--    classifier api call logic-->
     function callClassifier() {
       var textInputString = document.getElementById("textInput").value;
       axios.post('/api/textGender',{textInput: textInputString})
@@ -41,17 +182,39 @@
                 document.getElementById("prediction").innerHTML = response.data["prediction"]
                 document.getElementById("certFemale").innerHTML = response.data["certainty"]["female"]
                 document.getElementById("certMale").innerHTML = response.data["certainty"]["male"]
+                move(response.data["certainty"]["female"])
             })
             .catch(error => console.error(error));
     }
-    </script>
+<!--    word count logic-->
+    var input = document.querySelectorAll('textarea')[0];
+    input.addEventListener('keyup', function() {
 
-    <script>
-    function showContent() {
-      var temp = document.getElementsByTagName("template")[0];
-      var clone = temp.content.cloneNode(true);
-      document.body.appendChild(clone);
+      // word counter logic
+        var words = input.value.match(/\b[-?(\w+)?]+\b/gi);
+        if(words === null){
+            document.getElementById("wordCount").innerHTML = 0
+        }
+        else {
+            document.getElementById("wordCount").innerHTML = words.length
+        }
+    });
+
+<!--    sliding graph update-->
+    function move(femaleBarPercent) {
+      var elem = document.getElementById("femaleBar");
+      var width = 1;
+      var id = setInterval(frame, 1);
+      function frame() {
+        if (width >= 100) {
+          clearInterval(id);
+        } else {
+          width++;
+          elem.style.width = femaleBarPercent;
+        }
+      }
     }
+
     </script>
 </body>
 </html>
