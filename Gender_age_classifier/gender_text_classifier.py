@@ -1,8 +1,10 @@
+import sklearn
+from sklearn.feature_extraction.text import CountVectorizer
 import torch
 import torch.nn as nn
 import torch.utils.data
 import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
+
 
 # Set the seed for PyTorch random number generator
 torch.manual_seed(1)
@@ -103,10 +105,6 @@ class DAN(nn.Module):
         return out
 
 
-def generate_featurizer(vocabulary):
-    return CountVectorizer(vocabulary=vocabulary)
-
-
 def csv_to_corpus_dict(filename):
     '''input:
             filename: name of file to storing corpus
@@ -133,10 +131,13 @@ def generate_PyTorch_Dataset(string_entry, vocab, label=0):
         testset_input: the pytorch test that can be evaled by the model, the string entry is vectorized
     '''
     # creates bag of words featurizer
-    bow_featurizer = generate_featurizer(vocab)
-
+    bow_featurizer = CountVectorizer(vocabulary=vocab)
+    print(bow_featurizer.transform([string_entry]).toarray()[0])
+    print(vectorizeX(freqMap(string_entry), vocab))
+    print(bow_featurizer.transform([string_entry]).toarray()[0].all() == vectorizeX(freqMap(string_entry), vocab).all())
     # convert the entry to bow representation and torch Tensor
-    X_test_input = torch.Tensor(bow_featurizer.transform([string_entry]).toarray())
+    # X_test_input = torch.Tensor(bow_featurizer.transform([string_entry]).toarray())
+    X_test_input = torch.Tensor([vectorizeX(freqMap(string_entry), vocab)])
     y_test_input = torch.LongTensor(np.array(label).flatten())
     # Note: for Y_test_input I am just putting 0 for default.  I am not sure how to create a pytorch set without
     # the label simply for evaluating probability yet.
