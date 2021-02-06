@@ -68,30 +68,38 @@ w3-button:hover {background-color: red;}
                 </div>
             </div>
             <div class="w3-content w3-row">
-                <div class="w3-container w3-cell w3-third">
-                    <h5>Prediction:</h5>
-                    <p id="prediction">Click classify to find out</p>
+                <div>
+
+                    <h5 >Predictions and Certainties:</h5>
                 </div>
-                <div class="w3-container w3-cell w3-third">
-                    <h5>Certainty female:</h5>
-                    <p id="certFemale">Click classify to find out</p>
-                </div>
-                <div class="w3-container w3-cell w3-third">
-                    <h5>Certainty male:</h5>
-                    <p id="certMale">Click classify to find out</p>
-                </div>
+
 
             </div>
             <div class="w3-content w3-row">
-                <div class="w3-container w3-cell w3-third">
-                </div>
+                <div id="genderPrediction" class="w3-container w3-cell w3-third">Gender:</div>
                 <div class="w3-container w3-cell w3-twothird">
-                    <div id="maleBar">
-                        <div id="femaleBar" class="w3-container-padding w3-center" style="height:24px;width:0%;"></div>
+                    <div style="height:24px;" id="maleBar">
+                        <div id="femaleBar" class="w3-col" style="height:24px;width:50%;"><div id="certFemale" class="w3-text-white w3-left-align">f:50%</div></div>
+                        <div class="w3-rest"><div id="certMale" class="w3-text-white w3-right-align">m:50%</div></div>
                     </div>
                 </div>
             </div>
-
+            <div class="w3-content w3-row"><p> </p>
+            </div>
+            <div class="w3-content w3-row">
+                <div id="tonePrediction" class="w3-container w3-cell w3-third">Tone:</div>
+                <div class="w3-container w3-cell w3-twothird">
+                    <div style="height:24px;" id="posBar">
+                        <div id="negBar" class="w3-col" style="height:24px;width:50%;"><div id="certNeg" class="w3-text-white w3-left-align">-:50%</div></div>
+                        <div class="w3-rest"><div id="certPos" class="w3-text-white w3-right-align">+:50%</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-content w3-row"><p> </p>
+            </div>
+            <div class="w3-content w3-row">
+                <div id="agePrediction" class="w3-container w3-cell w3-third">Age:</p></div>
+            </div>
         </div>
         <br>
         <p class="w3-opacity"><i>How does it work?  What does it do?</i></p>
@@ -168,6 +176,14 @@ w3-button:hover {background-color: red;}
         .grad {background-image: linear-gradient(60deg, #6600cc, #ff0066)}
         #femaleBar {background: rgb(0, 0, 0)}
         #maleBar {background: rgba(0, 0, 0, .5)}
+        #negBar {background: rgb(0, 0, 0)}
+        #posBar {background: rgba(0, 0, 0, .5)}
+        .alignleft {
+            float: left;
+        }
+        .alignright {
+            float: right;
+}
     </style>
 
 
@@ -176,13 +192,19 @@ w3-button:hover {background-color: red;}
 <!--    classifier api call logic-->
     function callClassifier() {
       var textInputString = document.getElementById("textInput").value;
-      axios.post('/api/textGender',{textInput: textInputString})
+<!--      axios.post('/api/textGender',{textInput: textInputString})-->
+      axios.post('/api/textAgeGender',{textInput: textInputString})
             .then(response => {
 <!--                console.log(response.data);-->
-                document.getElementById("prediction").innerHTML = response.data["prediction"]
-                document.getElementById("certFemale").innerHTML = response.data["certainty"]["female"]
-                document.getElementById("certMale").innerHTML = response.data["certainty"]["male"]
-                move(response.data["certainty"]["female"])
+                document.getElementById("genderPrediction").innerHTML = 'Gender: ' + response.data["predictions"]["gender"]["prediction"]
+                document.getElementById("agePrediction").innerHTML = 'Age: ' + response.data["predictions"]["age"]["prediction"]
+                document.getElementById("tonePrediction").innerHTML = 'Tone: ' + response.data["predictions"]["tone"]["prediction"]
+                document.getElementById("certFemale").innerHTML = 'f:' + response.data["predictions"]["gender"]["certainty"]["female"]
+                document.getElementById("certMale").innerHTML = 'm:' + response.data["predictions"]["gender"]["certainty"]["male"]
+                document.getElementById("certNeg").innerHTML = '-:' + response.data["predictions"]["tone"]["certainty"]["negative"]
+                document.getElementById("certPos").innerHTML = '+:' + response.data["predictions"]["tone"]["certainty"]["positive"]
+                move(response.data["predictions"]["gender"]["certainty"]["female"],"femaleBar")
+                move(response.data["predictions"]["tone"]["certainty"]["negative"],"negBar")
             })
             .catch(error => console.error(error));
     }
@@ -200,9 +222,19 @@ w3-button:hover {background-color: red;}
         }
     });
 
+    // Used to toggle the menu on small screens when clicking on the menu button
+    function myFunction() {
+      var x = document.getElementById("navDemo");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else {
+        x.className = x.className.replace(" w3-show", "");
+      }
+    }
+
 <!--    sliding graph update-->
-    function move(femaleBarPercent) {
-      var elem = document.getElementById("femaleBar");
+    function move(femaleBarPercent,id) {
+      var elem = document.getElementById(id);
       var width = 1;
       var id = setInterval(frame, 1);
       function frame() {

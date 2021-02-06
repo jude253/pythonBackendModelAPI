@@ -1,11 +1,10 @@
-import sklearn
-from sklearn.feature_extraction.text import CountVectorizer
 import torch
 import torch.nn as nn
 import torch.utils.data
 import numpy as np
-
-
+from sklearn.feature_extraction.text import CountVectorizer
+import joblib
+from sklearn.ensemble import RandomForestClassifier
 # Set the seed for PyTorch random number generator
 torch.manual_seed(1)
 
@@ -22,7 +21,7 @@ print("GPU is available:", gpu_available)
 
 
 cwd = os.getcwd()
-VOCABFILENAME = "Gender_age_classifier/corpustestMF.csv"
+VOCABFILENAME = 'Gender_age_classifier/corpustestMF.csv'
 MODELFILENAME = "Gender_age_classifier/model.pt"
 vocab_size = 12820
 embedding_size = 320
@@ -49,10 +48,8 @@ class DAN(nn.Module):
         This function takes in multiple inputs, stored in one tensor x. Each input is a bag of word representation of reviews.
         For each review, it retrieves the word embedding of each word in the review and averages them (weighted by the corresponding
         entry in x).
-
         Input:
             x: nxd torch Tensor where each row corresponds to bag of word representation of a review
-
         Output:
             n x (embedding_size) torch Tensor for the averaged reivew
         '''
@@ -87,10 +84,8 @@ class DAN(nn.Module):
         '''
         This function takes in a bag of word representation of reviews. It calls the self.average to get the
         averaged review and pass it through the linear layer to produce the model's belief.
-
         Input:
             x: nxd torch Tensor where each row corresponds to bag of word representation of reviews
-
         Output:
             nx2 torch Tensor that corresponds to model belief of the input. For instance, output[0][0] is
             is the model belief that the 1st review is negative
@@ -105,10 +100,13 @@ class DAN(nn.Module):
         return out
 
 
+def generate_featurizer(vocabulary):
+    return CountVectorizer(vocabulary=vocabulary)
+
+
 def csv_to_corpus_dict(filename):
     '''input:
             filename: name of file to storing corpus
-
         output:
             corpus: dictionary with each word in blog as key and an index as a value
     '''
@@ -131,13 +129,10 @@ def generate_PyTorch_Dataset(string_entry, vocab, label=0):
         testset_input: the pytorch test that can be evaled by the model, the string entry is vectorized
     '''
     # creates bag of words featurizer
-    bow_featurizer = CountVectorizer(vocabulary=vocab)
-    print(bow_featurizer.transform([string_entry]).toarray()[0])
-    print(vectorizeX(freqMap(string_entry), vocab))
-    print(bow_featurizer.transform([string_entry]).toarray()[0].all() == vectorizeX(freqMap(string_entry), vocab).all())
+    bow_featurizer = generate_featurizer(vocab)
+
     # convert the entry to bow representation and torch Tensor
-    # X_test_input = torch.Tensor(bow_featurizer.transform([string_entry]).toarray())
-    X_test_input = torch.Tensor([vectorizeX(freqMap(string_entry), vocab)])
+    X_test_input = torch.Tensor(bow_featurizer.transform([string_entry]).toarray())
     y_test_input = torch.LongTensor(np.array(label).flatten())
     # Note: for Y_test_input I am just putting 0 for default.  I am not sure how to create a pytorch set without
     # the label simply for evaluating probability yet.
@@ -213,13 +208,80 @@ def prediction(model, testset_input, label_meaning):
 
 
 def gender_text_classifier(input_string):
-    global VOCABFILENAME, MODELFILENAME, vocab_size, label_meaning, embedding_size,cwd
-
+    global VOCABFILENAME, MODELFILENAME, vocab_size, label_meaning, embedding_size
     vocab = csv_to_corpus_dict(VOCABFILENAME)
     testset_input = generate_PyTorch_Dataset(input_string, vocab)
     model = load_model(MODELFILENAME, vocab_size, embedding_size)
-    pred, certainty_female, certainty_male = prediction(model, testset_input, label_meaning)
+    gender, certainty_female, certainty_male = prediction(model, testset_input, label_meaning)
     certainty_female = str(round(100*certainty_female,2)) + '%'
     certainty_male = str(round(100*certainty_male, 2)) + '%'
-    dict_resp = {'prediction': pred, 'certainty': {'female': certainty_female, 'male': certainty_male}}
+
+    dict_resp = {'prediction': gender, 'certainty': {'female': certainty_female, 'male': certainty_male}}
+    return dict_resp
+
+def age_text_classifier(input_string):
+    global VOCABFILENAME, MODELFILENAME, vocab_size, label_meaning, embedding_size
+
+    age_vocab = csv_to_corpus_dict("Gender_age_classifier/ageAllCorpus.csv")
+    bow_featurizer = generate_featurizer(age_vocab)
+
+    # convert the entry to bow representation and torch Tensor
+    X_test_input = bow_featurizer.transform([input_string]).toarray()
+    print(cwd)
+    model = joblib.load("Gender_age_classifier/random_forest.joblib")
+    age = model.predict(X_test_input)[0]
+    label_meaning = ['<20', '20-29', '30-39', '>40']
+    age = label_meaning[age]
+    dict_resp = {'prediction': age}
+    return dict_resp
+
+def gender_age_classifier(input_string):
+    #gender Classification
+    global VOCABFILENAME, MODELFILENAME, vocab_size, label_meaning, embedding_size
+    vocab = csv_to_corpus_dict(VOCABFILENAME)
+    testset_input = generate_PyTorch_Dataset(input_string, vocab)
+    model = load_model(MODELFILENAME, vocab_size, embedding_size)
+    gender, certainty_female, certainty_male = prediction(model, testset_input, label_meaning)
+    certainty_female = str(round(100 * certainty_female, 2)) + '%'
+    certainty_male = str(round(100 * certainty_male, 2)) + '%'
+    #end gender classification
+
+    #age classification:
+    age_vocab = csv_to_corpus_dict("Gender_age_classifier/ageAllCorpus.csv")
+    bow_featurizer = generate_featurizer(age_vocab)
+
+    # convert the entry to bow representation and torch Tensor
+    X_test_input = bow_featurizer.transform([input_string]).toarray()
+    model = joblib.load("Gender_age_classifier/random_forest.joblib")
+    age = model.predict(X_test_input)[0]
+    age_labels = ['<20', '20-29', '30-39', '>40']
+    age = age_labels[age]
+    #end age classification
+
+    #start tone classification
+    tone_vocab = np.load('Gender_age_classifier/vocabulary.npy', allow_pickle=True).item()
+    bow_featurizer = generate_featurizer(tone_vocab)
+
+    # convert the entry to bow representation and torch Tensor
+    X_test_input = bow_featurizer.transform([input_string]).toarray()
+    testset_input = generate_PyTorch_Dataset(input_string, tone_vocab)
+    model = load_model('Gender_age_classifier/toneModel.pt', len(tone_vocab), 32)
+    tone_label_meaning = ['Negative', 'Positive']
+    tone, certainty_negative, certainty_positive = prediction(model, testset_input, tone_label_meaning)
+    certainty_negative = str(round(100 * certainty_negative, 2)) + '%'
+    certainty_positive = str(round(100 * certainty_positive, 2)) + '%'
+    #end tone classification
+
+    dict_resp = {'predictions': {'age':
+                                     {'prediction': age},
+                                 'gender':
+                                     {'prediction': gender,
+                                        'certainty': {'female': certainty_female, 'male': certainty_male}
+                                      },
+                                 'tone':
+                                     {'prediction': tone,
+                                        'certainty': {'negative': certainty_negative, 'positive': certainty_positive}
+                                      }
+                                 }
+                 }
     return dict_resp

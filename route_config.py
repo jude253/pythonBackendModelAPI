@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, send_from_directory
 import json
 #import the Deep averaging Neural Network model classifier:
 
-# from Gender_age_classifier.gender_text_classifier import gender_text_classifier
+from Gender_age_classifier.gender_text_classifier import gender_text_classifier, age_text_classifier, \
+    gender_age_classifier
 from Name_classifier.nameClassifier import name_classifier
 # app reference
 app = Flask(__name__)
@@ -46,13 +47,24 @@ def indexHTML():
 # def before_request():
 #     print('before API request')
 
-#this is the api endpoint for classifying the gender of the writer of text, it calls a deep averaging neural network model
-# @app.route('/api/textGender', methods=['POST'])
-# def get_text_gender():
-#     textInput = request.json['textInput']
-#     response = gender_text_classifier(textInput)
-#     return json.dumps(response)
+# this is the api endpoint for classifying the gender of the writer of text, it calls a deep averaging neural network model
+@app.route('/api/textGender', methods=['POST'])
+def get_text_gender():
+    textInput = request.json['textInput']
+    response = gender_text_classifier(textInput)
+    return json.dumps(response)
 
+@app.route('/api/textAge', methods=['POST'])
+def get_text_age():
+    textInput = request.json['textInput']
+    response = age_text_classifier(textInput)
+    return json.dumps(response)
+gender_age_classifier
+@app.route('/api/textAgeGender', methods=['POST'])
+def get_text_age_gender():
+    textInput = request.json['textInput']
+    response = gender_age_classifier(textInput)
+    return json.dumps(response)
 @app.route('/api/nameGender', methods=['POST'])
 def get_name_gender():
     textInput = request.json['nameInput']
