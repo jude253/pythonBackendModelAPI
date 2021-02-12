@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Jude Capachietti's website{% endblock %}
+{% block meta_description %}Learn about Jude Capachietti, see his portfolio and more.{% endblock %}
+
+{% block body %}
+<!-- Page content -->
+    <div class="w3-content" style="max-width:2000px;margin-top:46px">
+
+      <!-- Name Gender Classifier Section -->
+      <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="jude">
+        <h1 class="w3-wide"><b>Name Gender Classifier</b></h1>
+        <p class="w3-opacity"><i>Predicts whether a name is male or female.  Try it out!</i></p>
+        <br>
+        <div class="w3-content w3-padding-32 grad" style="max-width:350px;">
+            <div>
+                <input type="text" id="nameInput" name="name" placeholder="Name">
+                <button onclick="callClassifier()" class="w3-button w3-black w3-hover-dark-grey" id="classify" name="submit" style="color:white; margin-left:.5em;">Classify</button>
+            </div>
+            <p id="prediction">My classifier thinks Name is: male or female</p>
+            <p style="margin-block-end:0;"></p>
+        </div>
+        <br>
+        <p class="w3-opacity"><i>How does it work?  What does it do?</i></p>
+        <div class="w3-row w3-padding-32">
+            <div class="w3-center">
+                <p class="w3-justify">I built this classifier using a naive bayes algorithm.  That is, if we consider x to be a name and y being male or female, we calculate p(y)-- the probability in the training set of a name being male or female-- then p(X|y) --given that we a looking at all males or all females, what is the probability of picking this name, then using bayes rule we get can find P(y|x)=P(x|y)P(y)/p(x) by approximating P(x|y)P(y).  We assume that all the features in a name are independent in this approach; however, it makes for easier math. The error of this classifier is about 18% after being trained on about 200 names (100 male, 100 female). This can be improved by changing how I vectorize the names.  For example, I could add a feature for "names ending in a" or "starting with J".  This might improve accuracy because for example many female names end with "a" like Jessica or Melissa.  It's funny: this classifier thinks the name Jane is male!  I am planning on uploading more Machine Learning projects on my webpage eventually. Imagine what these algorithms can do when trained with the end goal of keeping you scrolling on instagram longer!
+                </p>
+            </div>
+
+        </div>
+
+      </div>
+
+    <!-- End Page Content -->
+    </div>
+
+    <!-- Image of location/map -->
+<!--    <img src="/images/pexels-andrew-neel-2859169.jpg" class="w3-image w3-greyscale-min" style="width:100%">-->
+
+    <script>
+        function callClassifier() {
+          console.log("clicked")
+          var nameInputString = document.getElementById("nameInput").value;
+          axios.post('/api/nameGender',{nameInput: nameInputString})
+                .then(response => {
+                    console.log(response.data);
+                    document.getElementById("prediction").innerHTML = "My classifier thinks " + nameInputString + " is: " + response.data["prediction"]
+                })
+                .catch(error => console.error(error));
+        }
+    </script>
+    <style>
+        body {font-family: "Lato", sans-serif}
+        .mySlides {display: none}
+        .grad {background-image: linear-gradient(150deg, #29e658, #2448ff)}
+        w3-button:hover {background-color: red;}
+    </style>
+{% endblock %}

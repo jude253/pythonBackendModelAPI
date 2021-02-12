@@ -2,4 +2,6 @@ Flask
 numpy
 torch
 torchvision
-sklearn
+werkzeug
+scikit-learn
+joblib
