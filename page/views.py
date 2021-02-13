@@ -3,8 +3,8 @@ page = Blueprint('templates', __name__, template_folder='templates')
 
 
 @page.route('/')
-def index():
-    return render_template('/index.html')
+def home():
+    return render_template('/home.html')
 
 @page.route('/nameDemo/')
 def nameDemo():
@@ -18,6 +18,6 @@ def textAnalysis():
 def base():
     return render_template('/base.html')
 
-@page.route('/home/')
-def home():
-    return render_template('/home.html')
+@page.route('/index/')
+def index():
+    return render_template('/index.html')
