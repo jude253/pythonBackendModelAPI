@@ -23,8 +23,8 @@
     <div class="w3-top">
       <div class="w3-bar w3-black w3-card">
         <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-        <a href="{{ url_for('templates.index') }}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
-        <a href="{{ url_for('templates.index') }}#jude" class="w3-bar-item w3-button w3-padding-large w3-hide-small">JUDE</a>
+        <a href="{{ url_for('templates.home') }}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+        <a href="{{ url_for('templates.index') }}#jude" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ABOUT JUDE</a>
         <div class="w3-dropdown-hover w3-hide-small">
           <a href="{{ url_for('templates.index') }}#portfolio" class="w3-padding-large w3-button" title="portfolio">PORTFOLIO <i class="fa fa-caret-down"></i></a>
           <div class="w3-dropdown-content w3-bar-block w3-card-4">
@@ -42,7 +42,8 @@
 
 <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
     <div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
-      <a href="{{ url_for('templates.index') }}#jude" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">JUDE</a>
+<!--      <a href="{{ url_for('templates.home') }}" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">HOME</a>-->
+      <a href="{{ url_for('templates.index') }}#jude" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">ABOUT JUDE</a>
       <a href="{{ url_for('templates.index') }}#portfolio" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">PORTFOLIO</a>
       <a href="{{ url_for('templates.index') }}#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">CONTACT</a>
     </div>
@@ -60,7 +61,7 @@
         <a href="/images/snapcode.png" target="_blank"><i class="fa fa-snapchat w3-hover-opacity"></i></a>
         <a href="https://twitter.com/MrCapachietti" target="_blank"><i class="fa fa-twitter w3-hover-opacity"></i></a>
         <a href="https://www.linkedin.com/in/jude-capachietti/" target="_blank"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
-        <p class="w3-medium">Powered by <a href="https://www.python.org/" target="_blank"><img src="{{ url_for('static', filename='images/pythonLogo.png') }}" style="width:32px" class="w3-circle"></a></p>
+        <p class="w3-medium"><a href="https://www.python.org/" target="_blank"><img src="{{ url_for('static', filename='images/pythonLogo.png') }}" style="width:32px" class="w3-circle"></a></p>
     </footer>
 
   </body>

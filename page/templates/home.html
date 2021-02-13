@@ -4,17 +4,19 @@
 {% block meta_description %}Learn about Jude Capachietti, see his portfolio and more.{% endblock %}
 
 {% block body %}
-<!-- Page content -->
-<div class="w3-content" style="max-width:2000px;margin-top:46px">
+  <!-- Page content -->
+  <div class="w3-content fixed-bg" style="max-width:2000px;margin-top:46px;">
 
-      <!-- Text Analysis Classifier Section -->
-      <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="jude">
-        <h1 class="w3-wide"><b>Text Analysis Classifier</b></h1>
-        <p class="w3-opacity"><i>Predicts whether text sounds like it is written by a male or female, positive or negative, and age.  Try it out!</i></p>
+      <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px;" id="jude">
+          <h1 class="w3-wide"><b><i>How do you sound?</i></b></h1>
+          <h5 class="w3-wide"><b>My latest project tells you.</b></h5>
+
+        <p><i>Enter text below to see how you sound! Also there's sample text down below
+            you can copy and paste in, and it works best with 50-100 words.</i></p>
         <br>
         <div class="w3-content w3-padding-32 grad" style="max-width:700px;">
             <div class="w3-row">
-                <h4>This works best typing between 50 and 100 words:</h4>
+<!--                <h4>This works best typing between 50 and 100 words:</h4>-->
                 <p><textarea id="textInput" name="textInput" rows="7" style = "max-width:90%;width:80%;" ></textarea></p>
                 <div class="w3-content w3-row">
                     <div class="w3-container w3-cell w3-third">Word count: <span id="wordCount">0</span>
@@ -28,11 +30,8 @@
             </div>
             <div class="w3-content w3-row">
                 <div>
-
                     <h5 >Predictions and Certainties:</h5>
                 </div>
-
-
             </div>
             <div class="w3-content w3-row">
                 <div id="genderPrediction" class="w3-container w3-cell w3-third">Gender:</div>
@@ -60,23 +59,35 @@
                 <div id="agePrediction" class="w3-container w3-cell w3-third">Age:</p></div>
             </div>
         </div>
-        <br>
-        <p class="w3-opacity"><i>How does it work?  What does it do?</i></p>
+<!--        <br>-->
+<!--        <p><i>How does it work?  What does it do?</i></p>-->
         <div class="w3-row w3-padding-32">
             <div class="w3-center">
                 <p class="w3-justify">
-                    I built this classifier using a deep neural network with word embeddings.  The word embeddings are
-                    averaged together in a weighted average and the neural network has 2 layers.  It has been quite a
-                    journey to get this classifier to work and I have learned a lot from it.  It is trained off the
-                    the Blog Authorship Corpus.  The main issue I was having when getting this classifier to work
-                    effectively is that my computer is not powerful enough to run through the whole dataset, so I had
-                    to break down the data into a small sample, then I only took the first 100 words of blog entries
-                    that were over 100 words in length and I skipped over blog entries that didn't have at least 50
-                    words.  I also made sure I had an approximately 50% male and 50% female training dataset.  This
-                    reduced the amount of hyper parameters down to a point where I could train an effective model,
-                    but in the future I am going to use Microsoft Azure to train a Deep Averaging Neural Network on
-                    the whole Blog Authorship Corpus.  Then I plan on expanding this project to be a chrome extension
-                    that people can use to check their email and other text on the internet.
+<!--                <p>-->
+
+                    <i>Sample Text 1:</i>
+                    <br>
+                    Hey Jude!
+                    <br>
+                        I am a recruiter from Blankity Blank.
+                    I was looking at your portfolio, and I think you would be a great fit for out team!
+                    Do you have time to set up a quick chat? I am looking forward to connecting.
+                    <br>
+                    <br>
+                    <i>Sample Text 2:</i>
+                    <br>
+                    Dear Jude,
+                    <br>
+                    Thank you for your interest in the Full Stack Software Engineer position at Blank Blank
+                    in the Blank Area. Unfortunately, we will not be moving forward with your application,
+                    but we appreciate your time and interest in Blank Blank.
+                    <br>
+                    <br>
+                    Regards,
+                    <br>
+                    The Blank Blank recruitment team
+
                 </p>
             </div>
 
@@ -89,8 +100,10 @@
 
     <style>
         body {font-family: "Lato", sans-serif}
-        .mySlides {display: none}
-        .grad {background-image: linear-gradient(60deg, #6600cc, #ff0066)}
+        .grad {
+            background-image: linear-gradient(60deg, #6600cc, #ff0066);
+            opacity: 0.95;
+        }
         #femaleBar {background: rgb(0, 0, 0)}
         #maleBar {background: rgba(0, 0, 0, .5)}
         #negBar {background: rgb(0, 0, 0)}
@@ -100,7 +113,29 @@
         }
         .alignright {
             float: right;
-}
+        }
+        h1{color:white}
+        h5{color:white}
+        p {color:white}
+        body {
+          /* The background image */
+          background-image: url('{{ url_for('static', filename='images/nn.jpeg') }}');
+
+          /* Set a specified height, or the minimum height for the background image */
+          min-height: 500px;
+
+          /* Set background image to fixed (don't scroll along with the page) */
+          background-attachment: fixed;
+
+          /* Center the background image */
+          background-position: center;
+
+          /* Set the background image to no repeat */
+          background-repeat: no-repeat;
+
+          /* Scale the background image to be as large as possible */
+          background-size: cover;
+        }
     </style>
 
 

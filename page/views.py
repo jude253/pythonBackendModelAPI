@@ -17,3 +17,7 @@ def textAnalysis():
 @page.route('/base/')
 def base():
     return render_template('/base.html')
+
+@page.route('/home/')
+def home():
+    return render_template('/home.html')
