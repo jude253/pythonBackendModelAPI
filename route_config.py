@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 import json
+from flask_cors import cross_origin
 #import the Deep averaging Neural Network model classifier:
 
 from Text_classifiers.text_analysis_classifiers import text_analysis_classifier
@@ -39,12 +40,14 @@ def send_favicon(filename):
 
 
 @app.route('/api/textAnalysis', methods=['POST'])
+@cross_origin()
 def get_text_analysis():
     textInput = request.json['textInput']
     response = text_analysis_classifier(textInput)
     return json.dumps(response)
 
 @app.route('/api/nameGender', methods=['POST'])
+@cross_origin()
 def get_name_gender():
     textInput = request.json['nameInput']
     response = name_classifier(textInput)
