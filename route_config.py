@@ -9,7 +9,7 @@ from page.views import page
 
 # app reference
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.register_blueprint(page)
 app.upload_folder = "static/"
 app.config['IMAGE_FOLDER'] = "static/images/"
