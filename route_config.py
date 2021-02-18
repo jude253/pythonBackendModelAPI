@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.register_blueprint(page)
 app.upload_folder = "static/"
 app.config['IMAGE_FOLDER'] = "static/images/"
-
+app.config['CORS_ORIGINS'] = ['*']
 #these are test entries of text input to help me debug the functionality
 
 #this is for page navigation and image loading:
