@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 import json
-from flask_cors import cross_origin
+from flask_cors import CORS
 #import the Deep averaging Neural Network model classifier:
 
 from Text_classifiers.text_analysis_classifiers import text_analysis_classifier
@@ -9,10 +9,10 @@ from page.views import page
 
 # app reference
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(page)
 app.upload_folder = "static/"
 app.config['IMAGE_FOLDER'] = "static/images/"
-app.config['CORS_ORIGINS'] = ['*']
 #these are test entries of text input to help me debug the functionality
 
 #this is for page navigation and image loading:
@@ -40,14 +40,12 @@ def send_favicon(filename):
 
 
 @app.route('/api/textAnalysis', methods=['POST'])
-@cross_origin()
 def get_text_analysis():
     textInput = request.json['textInput']
     response = text_analysis_classifier(textInput)
     return json.dumps(response)
 
 @app.route('/api/nameGender', methods=['POST'])
-@cross_origin()
 def get_name_gender():
     textInput = request.json['nameInput']
     response = name_classifier(textInput)
