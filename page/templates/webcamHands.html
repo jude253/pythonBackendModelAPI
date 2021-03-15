@@ -19,9 +19,7 @@
 
 </body>
 <script type="module">
-
-const model =  await tf.loadGraphModel('https://0.0.0.0:5000/model');
-
+const model =  await tf.loadGraphModel(window.location.origin + '/model');
 
 function convertHandMapToArray(hand_landmarks){
   var x = new Array(63).fill(0); //output array

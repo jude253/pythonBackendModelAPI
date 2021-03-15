@@ -23,11 +23,6 @@ def webcamHands():
     return render_template('/webcamHands.html')
 
 
-@page.route('/websocketsTest/')
-def websocketsTest():
-    return render_template('/websocketsTest.html')
-
-
 @page.route('/base/')
 def base():
     return render_template('/base.html')
