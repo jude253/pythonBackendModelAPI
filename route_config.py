@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, jsonify, send_file
 import json
 from flask_cors import CORS
 #import the Deep averaging Neural Network model classifier:
@@ -45,8 +45,20 @@ def get_text_analysis():
     response = text_analysis_classifier(textInput)
     return json.dumps(response)
 
+
 @app.route('/api/nameGender', methods=['POST'])
 def get_name_gender():
     textInput = request.json['nameInput']
     response = name_classifier(textInput)
     return json.dumps(response)
+
+
+@app.route('/model')
+def model():
+    json_data = json.load(open("./page/templates/model.json"))
+    return jsonify(json_data)
+
+
+@app.route('/group1-shard1of1.bin')
+def group1_shard1of1():
+    return send_file('./page/templates/group1-shard1of1.bin')

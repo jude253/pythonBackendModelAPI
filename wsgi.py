@@ -1,3 +1,4 @@
+# this does some wsgi protocol thingy
 from app import app as application
 
 if __name__ == "__main__":

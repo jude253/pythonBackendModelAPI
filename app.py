@@ -1,6 +1,6 @@
 
-# I am not sure that this file is necessary or that it helps
-# this is from production.. not sure if needed
+# this is from production.  I am not entirely sure that is doing anything
+
 import os
 from route_config import *
 app.debug = True

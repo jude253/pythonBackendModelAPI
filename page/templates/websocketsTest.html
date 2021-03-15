@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(odd) { background: #efefef; }
+    </style>
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+</head>
+<body style="background-color:white;">
+<body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+</body>
+
+</body>
+
+<script type="text/javascript" charset="utf-8">
+        // Client Side Javascript to receive numbers.
+<!--$(document).ready(function(){-->
+<!--    // start up the SocketIO connection to the server - the namespace 'test' is also included here if necessary-->
+<!--    var socket = io.connect('https://' + document.domain + ':' + location.port + '/test');-->
+<!--    // this is a callback that triggers when the "my response" event is emitted by the server.-->
+<!--    socket.on('my response', function(msg) {-->
+<!--        $('#log').append('<p>Received: ' + msg.data + '</p>');-->
+<!--    });-->
+<!--    //example of triggering an event on click of a form submit button-->
+<!--    $('form#emit').submit(function(event) {-->
+<!--        socket.emit('my event', {data: $('#emit_data').val()});-->
+<!--        return false;-->
+<!--    });-->
+<!--});-->
+
+var socket = io.connect('https://' + document.domain + ':' + location.port + '/test');
+var form = document.getElementById('form');
+var input = document.getElementById('input');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (input.value) {
+      socket.emit('message', input.value);
+      input.value = '';
+    }
+  });
+</script>
+</html>

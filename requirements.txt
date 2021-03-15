@@ -6,3 +6,6 @@ torchvision
 werkzeug
 scikit-learn
 joblib
+keras
+tensorflow
+flask-socketio==4.3.2
