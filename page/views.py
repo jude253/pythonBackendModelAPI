@@ -5,7 +5,12 @@ page = Blueprint('templates', __name__, template_folder='templates')
 
 @page.route('/')
 def home():
-    return render_template('/home.html')
+    return render_template('/homemp.html')
+
+
+@page.route('/homemp')
+def homemp():
+    return render_template('/homemp.html')
 
 
 @page.route('/nameDemo/')
